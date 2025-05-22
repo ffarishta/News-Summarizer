@@ -6,51 +6,25 @@
   <title>News Summarizer</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center bg-gray-100 min-h-screen p-6 flex flex-col items-center">
-  <div>
-    <a href="{{url_for('login')}}">Login</a>
-    <br>
-    <a href="{{url_for('register')}}">Register</a>
+<body class="flex flex-col items-center justify-center bg-gray-100 min-h-screen p-6">
+  
+  <!-- Auth Links -->
+  <div class="mb-4">
+    <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Login</a>
+    <span class="mx-2">|</span>
+    <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Register</a>
   </div>
+
   <!-- Header -->
-  <header class="bg w-full bg max-w-3xl mb-8 text-center">
+  <header class="text-center mb-8">
     <h1 class="text-4xl font-bold text-gray-800">📰 News Summarizer</h1>
     <p class="text-gray-600 mt-2">Enter a topic to search for the latest news and get instant summaries.</p>
   </header>
 
-  <!-- Search Section -->
-  <section class="w-full max-w-3xl flex flex-col sm:flex-row items-center gap-4 mb-8">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="e.g., AI, climate change, elections"
-      class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <button
-      id="searchBtn"
-      class="w-full sm:w-auto bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-    >
-      Search & Summarize
-    </button>
-  </section>
-
-  <script>
-  document.getElementById('searchBtn').addEventListener('click', async () => {
-    const query = document.getElementById('searchInput').value;
-
-    const response = await fetch('/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: query }),
-    });
-
-    const data = await response.json();
-    console.log(data); // You can update the DOM here to show the summary
-  });
-</script>
-
+  <form method="POST">
+    <input type="text" name="query" placeholder="Type here">
+    <input type="submit" value="Submit">
+</form>
 
 </body>
 </html>

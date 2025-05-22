@@ -8,7 +8,7 @@ def preprocess_query(user_query):
 
     user_query = user_query.lower()
     
-        user_query = re.sub(r"[^a-zA-Z0-9\s]", "", user_query)
+    user_query = re.sub(r"[^a-zA-Z0-9\s]", "", user_query)
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(user_query)
 

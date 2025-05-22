@@ -4,19 +4,30 @@ import requests
 from newspaper import Article
 from transformers import pipeline
 import simplify
+import re
+
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
 def summarize(article):
-    summarizer = pipeline("summarization", model="facebook/bart-base")
-    summary = summarizer(article, max_length= 80, min_length=50, do_sample=False)
+    article = clean_text(article)
+    length = max(len(article), 200)
+    summary = summarizer(article, max_length=length, min_length=60, do_sample=False, num_beams=4)
     return summary[0]['summary_text']
+
+def clean_text(text):
+    # Remove common clutter
+    text = re.sub(r"(Share\s+Save|Listen to.*?article|[A-Z][a-z]+\s+[A-Z][a-z]+,?\s+(Editor|Reporter).*)", "", text)
+    text = re.sub(r"\d{1,2}\s+\w+\s+\d{4}", "", text)  # remove dates like 24 April 2025
+    return text.strip()
 
 def print_article(url):
     article = Article(url)
     article.download()
     article.parse()
     print("Title:", article.title)
+    #print("Title:", article.text)
     #print("Text:", summarize(str(article.text[:2000])))  # Show first 500 characters of text
-    return summarize(str(article.text[:2000]))
+    return summarize(str(article.text))
     #print("Title:", article.title)
     #print("Text:", summarize(str(article.text[:2000])))  # Show first 500 characters of text
 
@@ -61,16 +72,11 @@ def output(inp):
     data = response.json()
 
     count = 0
-    # Print article titles
-    
+
     for article in data.get("articles", []):
-        if count>15:
-            break
 
-        print("\n")
-        print(article["title"])
-        #print(print_article(article["url"]))
-        count+=1
-        #return print_article(article["url"])
+        
+        return print_article(article["url"])
+      
 
-#print(output("Trump"))
+#print(output("Climate"))
