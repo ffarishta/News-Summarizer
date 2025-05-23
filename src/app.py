@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, jsonify, request
+from flask import Flask, render_template, url_for, redirect, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -62,8 +62,13 @@ def index():
     if request.method == "POST":
         query = request.form.get("query")
         o = api.output(query)
-        return o
+        print(o)
+        return redirect(url_for('result'))
     return render_template('index.html')
+
+@app.route('/result')
+def result():
+    return render_template('result.html', data=o)
 
 
 
@@ -113,4 +118,4 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run(port=8000,debug=True)
+    app.run(port=5001,debug=True)

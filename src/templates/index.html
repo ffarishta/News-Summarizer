@@ -6,25 +6,39 @@
   <title>News Summarizer</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex flex-col items-center justify-center bg-gray-100 min-h-screen p-6">
-  
-  <!-- Auth Links -->
-  <div class="mb-4">
-    <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Login</a>
-    <span class="mx-2">|</span>
-    <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Register</a>
-  </div>
+<body class="bg-gradient-to-br from-gray-100 to-blue-50 min-h-screen flex flex-col items-center justify-center p-6">
 
-  <!-- Header -->
-  <header class="text-center mb-8">
-    <h1 class="text-4xl font-bold text-gray-800">📰 News Summarizer</h1>
-    <p class="text-gray-600 mt-2">Enter a topic to search for the latest news and get instant summaries.</p>
+  <!-- Auth Links -->
+  <header class="absolute top-6 right-6 space-x-4">
+    <a href="{{ url_for('login') }}" class="text-blue-700 font-medium hover:underline hover:text-blue-900 transition">Login</a>
+    <a href="{{ url_for('register') }}" class="text-blue-700 font-medium hover:underline hover:text-blue-900 transition">Register</a>
   </header>
 
-  <form method="POST">
-    <input type="text" name="query" placeholder="Type here">
-    <input type="submit" value="Submit">
-</form>
+  <!-- Main Content -->
+  <main class="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8">
+    <!-- Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-extrabold text-gray-800 mb-2">📰 News Summarizer</h1>
+      <p class="text-gray-600 text-lg">Enter a topic and get the latest news summarized instantly.</p>
+    </div>
+
+    <!-- Form -->
+    <form method="POST" class="flex flex-col sm:flex-row items-center gap-4">
+      <input 
+        type="text" 
+        name="query" 
+        placeholder="Type your query here..." 
+        class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        required
+      >
+      <button 
+        type="submit" 
+        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold shadow-sm"
+      >
+        Submit
+      </button>
+    </form>
+  </main>
 
 </body>
 </html>

@@ -10,8 +10,7 @@ summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
 def summarize(article):
     article = clean_text(article)
-    length = max(len(article), 200)
-    summary = summarizer(article, max_length=length, min_length=60, do_sample=False, num_beams=4)
+    summary = summarizer(article, max_length=1000, min_length=60, do_sample=False, num_beams=4)
     return summary[0]['summary_text']
 
 def clean_text(text):
@@ -24,12 +23,10 @@ def print_article(url):
     article = Article(url)
     article.download()
     article.parse()
-    print("Title:", article.title)
-    #print("Title:", article.text)
-    #print("Text:", summarize(str(article.text[:2000])))  # Show first 500 characters of text
-    return summarize(str(article.text))
     #print("Title:", article.title)
-    #print("Text:", summarize(str(article.text[:2000])))  # Show first 500 characters of text
+    title = article.title
+    summary = summarize(str(article.text))
+    return (title,summary)
 
 def output(inp):
     api_key = "0a359618697c4231a43d45282a597e08"
@@ -72,11 +69,14 @@ def output(inp):
     data = response.json()
 
     count = 0
-
+    articles = {}
+    count = 0
     for article in data.get("articles", []):
-
-        
-        return print_article(article["url"])
+        x,y = print_article(article["url"])
+        article[x] = y
+        if count > 2:
+            break
+        count += 1
       
 
 #print(output("Climate"))
