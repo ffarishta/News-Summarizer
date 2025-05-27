@@ -60,15 +60,19 @@ class LoginForm(FlaskForm):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "POST":
-        query = request.form.get("query")
-        o = api.output(query)
-        print(o)
+        query =  request.form.get("query")
+        test = {"Title":"option 1","Title 2": "option 2","Title 3" : "option 3"}
+        
+        session['result'] = api.output(query)
         return redirect(url_for('result'))
     return render_template('index.html')
 
-@app.route('/result')
+@app.route('/result', methods=['GET'])  # Needs to accept GET (not POST)
 def result():
-    return render_template('result.html', data=o)
+    result = session.get("result", "No data found")
+    #test = {"Title":"option 1","Title 2": "option 2","Title 3" : "option 3"}
+    #print(result)
+    return render_template('result.html', data=result)
 
 
 
@@ -81,7 +85,7 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                print("sucess")
+                print("sucesss")
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 

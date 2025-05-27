@@ -73,10 +73,13 @@ def output(inp):
     count = 0
     for article in data.get("articles", []):
         x,y = print_article(article["url"])
-        article[x] = y
-        if count > 2:
+        articles[x] = y
+        if count > 1:
             break
         count += 1
+        
+    
+    return articles
       
 
 #print(output("Climate"))
