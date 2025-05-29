@@ -6,11 +6,13 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import api
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'thisisasecretkey'
+app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
 
@@ -28,6 +30,13 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+
+class News(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    media_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String, unique=True, nullable=False)
+    text = db.Column(db.String, unique=True, nullable=False)
+
 
 
 class RegisterForm(FlaskForm):
@@ -61,18 +70,20 @@ class LoginForm(FlaskForm):
 def index():
     if request.method == "POST":
         query =  request.form.get("query")
-        test = {"Title":"option 1","Title 2": "option 2","Title 3" : "option 3"}
         
         session['result'] = api.output(query)
         return redirect(url_for('result'))
     return render_template('index.html')
 
-@app.route('/result', methods=['GET'])  # Needs to accept GET (not POST)
+@app.route('/result', methods=['GET','POST'])  # Needs to accept GET (not POST)
 def result():
     result = session.get("result", "No data found")
-    #test = {"Title":"option 1","Title 2": "option 2","Title 3" : "option 3"}
-    #print(result)
+    
     return render_template('result.html', data=result)
+
+
+
+
 
 
 
@@ -93,6 +104,7 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+
     return render_template('dashboard.html')
 
 

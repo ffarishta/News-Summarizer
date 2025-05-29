@@ -5,6 +5,8 @@ from newspaper import Article
 from transformers import pipeline
 import simplify
 import re
+from urllib.parse import urlparse
+
 
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
@@ -14,7 +16,6 @@ def summarize(article):
     return summary[0]['summary_text']
 
 def clean_text(text):
-    # Remove common clutter
     text = re.sub(r"(Share\s+Save|Listen to.*?article|[A-Z][a-z]+\s+[A-Z][a-z]+,?\s+(Editor|Reporter).*)", "", text)
     text = re.sub(r"\d{1,2}\s+\w+\s+\d{4}", "", text)  # remove dates like 24 April 2025
     return text.strip()
@@ -25,6 +26,7 @@ def print_article(url):
     article.parse()
     #print("Title:", article.title)
     title = article.title
+    print(article.text)
     summary = summarize(str(article.text))
     return (title,summary)
 
@@ -72,8 +74,9 @@ def output(inp):
     articles = {}
     count = 0
     for article in data.get("articles", []):
-        x,y = print_article(article["url"])
-        articles[x] = y
+        url = article["url"]
+        x,y = print_article(url)
+        articles[x] = [y,url, urlparse(url).netloc]
         if count > 1:
             break
         count += 1
